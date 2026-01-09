@@ -1,10 +1,11 @@
-import requests
 import re
 from fastapi.templating import Jinja2Templates
 templates = Jinja2Templates(directory="templates")
-import httpx
+#import httpx
 import os 
 from typing import Optional  # ← FIXED
+from fastapi.responses import RedirectResponse
+from fastapi import APIRouter,Form, Query, Request
 
 # Detect if running locally or deployed
 IS_PRODUCTION = os.getenv("RAILWAY_ENVIRONMENT") == "production"
@@ -19,7 +20,7 @@ templates = Jinja2Templates(directory="templates")
 
 def layout(title: str, content: str) -> str:
     return f'''<!DOCTYPE html>
-<html>
+<html data-theme="light">
 <head>
     <title>{title}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
@@ -53,10 +54,17 @@ def layout(title: str, content: str) -> str:
 </html>'''
 
 # ========== DASHBOARD ==========
+    
 @router.get("/")
-@router.get("")
-async def home():
-    content = '''
+def home():
+    return HTMLResponse("<h1>Hook Wizard is alive</h1>")
+    
+    
+    
+    
+    
+    
+    """content = '''
     <div style="text-align: center; padding: 4rem 0;">
         <h1 style="color: var(--primary);">
             <i class="fas fa-fish-hook"></i><br>
@@ -105,6 +113,12 @@ async def home():
     </div>
     '''
     return HTMLResponse(layout("Home", content))
+
+    return HTMLResponse(layout("<h1>Hook Wizard Working!</h1>"))"""
+
+
+
+    
 
 # ========== STEP 1: PLATFORM ==========
 @router.get("/wizard")
@@ -534,6 +548,48 @@ async def process_hook(
     tone: str = Form(...),
     topic: str = Form(...)
 ):
+    # === TOKEN CHECK BLOCK (ADD THIS) ===
+    user_id = "testuser"  # TODO: Replace with actual user from session
+    try:
+        token_response = requests.post(
+            "http://localhost:8000/api/deduct-tokens",  # Your dashboard
+            json={
+                "user_id": user_id,
+                "tool": "hook_wizard", 
+                "cost": 3  # Or whatever you set in dashboard apps list
+            },
+            timeout=3
+        )
+        
+        # Inside the token check block:
+        if token_response.status_code != 200:
+            return RedirectResponse(
+            url="http://localhost:8000/buy-tokens?tool=hook_wizard",
+            status_code=303
+        )
+
+
+        if token_response.status_code != 200:
+            # Return an error page instead of JSON since this is a web route
+            from fastapi.responses import HTMLResponse
+            error_html = """
+            <div class="alert alert-error">
+                <h3>Not enough tokens!</h3>
+                <p>You need 3 tokens to use Hook Wizard.</p>
+                <p>Current balance: {tokens_remaining}</p>
+                <a href="/dashboard" class="button">Go to Dashboard</a>
+            </div>
+            """.format(
+                tokens_remaining=token_response.json().get("tokens_remaining", 0)
+            )
+            return HTMLResponse(content=error_html, status_code=402)
+    except requests.exceptions.RequestException as e:
+        # If dashboard is unreachable, decide policy
+        # For now, let it pass (fail open during development)
+        print(f"⚠️ Dashboard token API unreachable: {e}")
+    # === END TOKEN CHECK ===
+
+
     # Show loading page
     loading_content = f'''
     <div style="max-width: 800px; margin: 0 auto; text-align: center; padding: 4rem 0;">
@@ -950,16 +1006,5 @@ def get_topic_guidance(topic: str) -> str:
         return "• Tailor hooks specifically to this topic\n• Use topic-relevant language and examples\n• Make hooks feel custom, not generic"
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8002)
-
-          
-           
-            
-           
-           
-            
-
-
-
-     
- 
+    import uvicorn
+    uvicorn.run("hook_wizard:router", host="0.0.0.0", port=8003)
