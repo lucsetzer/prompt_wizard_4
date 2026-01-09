@@ -1,0 +1,99 @@
+<!-- templates/index.html -->
+{% extends "base.html" %}
+
+{% block title %}Prompts Alchemy – AI Tools with Superpowers{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 0 auto;">
+
+    <!-- Hero Section -->
+    <section style="text-align: center; padding: 4rem 1rem;">
+        <h1 style="font-size: 3.5rem; margin-bottom: 1rem;">
+            <span style="color: #00f5d4;">AI Tools</span> That Actually Work
+        </h1>
+        <p style="font-size: 1.5rem; color: #6b7280; max-width: 700px; margin: 0 auto 3rem;">
+            Prompt Wizard, Script Wizard, and more — powered by tokens. No subscriptions, just pay for what you use.
+        </p>
+        
+        <!-- Stats -->
+        <div class="grid" style="grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 4rem;">
+            <div>
+                <h2 style="color: #00f5d4; font-size: 2.5rem; margin: 0;">5+</h2>
+                <p>Specialized AI Tools</p>
+            </div>
+            <div>
+                <h2 style="color: #8b5cf6; font-size: 2.5rem; margin: 0;">Pay-per-use</h2>
+                <p>Only spend what you need</p>
+            </div>
+            <div>
+                <h2 style="color: #f59e0b; font-size: 2.5rem; margin: 0;">Unified</h2>
+                <p>One login, all tools</p>
+            </div>
+        </div>
+
+        <!-- Auth Cards -->
+        <div class="grid" style="grid-template-columns: repeat(2, 1fr); gap: 2rem; max-width: 800px; margin: 0 auto;">
+            
+            <!-- Login Card -->
+            <div class="card" style="text-align: left;">
+                <h3>Welcome Back</h3>
+                <form method="POST" action="/login">
+                    <label for="login-username">Username</label>
+                    <input type="text" id="login-username" name="username" placeholder="Your username" required>
+                    
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" name="password" placeholder="Your password" required>
+                    
+                    <button type="submit" class="primary" style="width: 100%; margin-top: 1rem;">
+                        Sign In
+                    </button>
+                </form>
+                <p style="text-align: center; margin-top: 1rem; color: #6b7280;">
+                    <small>Demo account: <code>testuser</code> / <code>testpass</code></small>
+                </p>
+            </div>
+
+            <!-- Signup Card -->
+            <div class="card" style="text-align: left;">
+                <h3>Get Started</h3>
+                <form method="POST" action="/signup">
+                    <label for="signup-username">Username</label>
+                    <input type="text" id="signup-username" name="username" placeholder="Choose username" required>
+                    
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" name="email" placeholder="your@email.com" required>
+                    
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" name="password" placeholder="Create password" required>
+                    
+                    <button type="submit" class="secondary" style="width: 100%; margin-top: 1rem;">
+                        Create Account
+                    </button>
+                </form>
+                <p style="text-align: center; margin-top: 1rem; color: #6b7280;">
+                    <small>Get <strong>10 free tokens</strong> on signup!</small>
+                </p>
+            </div>
+        </div>
+
+        <!-- Tool Preview -->
+        <div style="margin-top: 6rem;">
+            <h2>Your Toolkit Awaits</h2>
+            <div class="grid" style="grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2rem;">
+                <div class="card">
+                    <h4><i class="fas fa-magic"></i> Prompt Wizard</h4>
+                    <p>Transform ideas into perfect AI prompts.</p>
+                </div>
+                <div class="card">
+                    <h4><i class="fas fa-scroll"></i> Script Wizard</h4>
+                    <p>Craft engaging scripts and stories.</p>
+                </div>
+                <div class="card">
+                    <h4><i class="fas fa-fish-hook"></i> Hook Wizard</h4>
+                    <p>Create attention-grabbing hooks.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
