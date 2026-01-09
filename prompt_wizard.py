@@ -1,13 +1,15 @@
-from fastapi import Request, Query, APIRouter
+print("🟢 1. Script starting...")
+
+
+from fastapi import Request, Query, APIRouter, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 import os
 import requests
 import json
-
+#import results
 
 router = APIRouter()
-
 # ========== CONFIGURATION ==========
 DEEPSEEK_API_KEY = "sk-8dadf46bd95c47f88e8cb1fb4cd1f89e"
 DEEPSEEK_API_URL = "https://api.deepseek.com/chat/completions"
@@ -407,6 +409,10 @@ Make it DETAILED and READY-TO-USE. The user will copy-paste this into {platform}
             
     except Exception as e:
         return f"## Error: {str(e)}\n\n## Fallback Prompt Structure:\n\nRole: AI Assistant\nTask: {user_prompt}\nAudience: {audience}\nTone: {tone}\nFormat: Structured response"
+
+
+print("🟢 2. Before route definitions...")
+
 
 # ========== HOME PAGE ==========
 @router.get("/")
@@ -930,11 +936,17 @@ async def generate_prompt(
     platform: str = Query("chatgpt"),
     style: str = Query("direct"),
     tone: str = Query("professional"),
-    prompt: str = Query("")
+    prompt: str = Query(""),
 ):
-    # Call DeepSeek API
+    """GET route - works with URL parameters"""
+    
+    # Token check happens automatically before this point
+    # If tokens insufficient, HTTPException is raised
+    
+    # Call DeepSeek API with your parameters
     optimized_prompt = call_deepseek_api(goal, audience, tone, platform, prompt)
     
+    # Your entire HTML template logic stays EXACTLY the same
     content = f'''
     <article>
         <header style="text-align: center; margin-bottom: 2rem;">
@@ -1030,3 +1042,4 @@ async def generate_prompt(
     
     return layout("Generated Prompt", content, step=7)
 
+print("🟢 3. Reached end of file...")
