@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Buy Tokens{% endblock %}
+{% block content %}
+<h2>Buy Tokens</h2>
+<p>Your balance: <strong>{{ user.token_balance }} tokens</strong></p>
+
+<div class="grid">
+    <div class="card">
+        <h3>100 Tokens</h3>
+        <p>$5.00</p>
+        <button class="secondary" onclick="buyTokens(100)">Buy Now</button>
+    </div>
+    <div class="card">
+        <h3>500 Tokens</h3>
+        <p>$20.00</p>
+        <button class="secondary" onclick="buyTokens(500)">Buy Now</button>
+    </div>
+</div>
+
+<script src="https://cdn.paddle.com/paddle/paddle.js"></script>
+<script>
+    Paddle.Environment.set('sandbox');  // Change to 'production' later
+    Paddle.Initialize({ vendor: YOUR_PADDLE_VENDOR_ID });
+
+    function buyTokens(amount) {
+        Paddle.Checkout.open({
+            product: YOUR_PADDLE_PRODUCT_ID,  // Different ID per token pack
+            passthrough: JSON.stringify({
+                user_id: "{{ user.id }}",
+                tokens: amount
+            })
+        });
+    }
+</script>
+{% endblock %}
