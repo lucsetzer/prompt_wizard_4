@@ -1,0 +1,90 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Prompts Alchemy{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/pico.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00f5d4;
+            --secondary: #8b5cf6;
+            --accent: #f59e0b;
+        }
+        .token-display {
+            background: #f8f9fa;
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .tool-card {
+            border: 1px solid #dee2e6;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: transform 0.2s;
+        }
+        .tool-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .step-card {
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            background: #f8fafc;
+        }
+        .step-card i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        .hook-example {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            margin: 2rem 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="container-fluid">
+    <ul>
+        <li><strong><a href="/" style="color: var(--primary);">Prompts Alchemy</a></strong></li>
+    </ul>
+    <ul>
+        {% if request.session.get('user_id') %}
+        <!-- Always show these until we implement proper auth -->
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><span>Hello, {{ request.session.username }}</span></li>
+        <li><a href="/logout">Logout</a></li>
+        {% else %}
+        <li><a href="/#login">Login</a></li>
+        <li><a href="/#signup">Sign Up</a></li>
+        {% endif %}
+    </ul>
+</nav>
+    
+    <main class="container">
+        {% block content %}
+        <!-- Page content goes here -->
+        {% endblock %}
+    </main>
+    
+    <footer class="container" style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #e5e7eb;">
+        <small>
+            Built with FastAPI & Pico.css • Token-powered AI tools • 
+            <a href="/terms">Terms</a> • <a href="/privacy">Privacy</a>
+        </small>
+    </footer>
+</body>
+</html>
